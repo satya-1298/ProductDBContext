@@ -1,4 +1,5 @@
 ﻿using CommonLayer.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using RepoLayer.Context;
 using RepoLayer.Entity;
@@ -23,12 +24,19 @@ namespace RepoLayer.Services
             var result = _context.Store.FromSqlRaw("SPRetrieveAllData").ToList();
             return result;
         }
+        public IEnumerable<ProductEntity> ProductByID(int productId)
+        {
+        
+             var result=_context.Store.FromSqlRaw("EXEC SPRetrieveByID @ProductId_Id", new SqlParameter("@ProductId_Id", productId))
+                .ToList();
+            return result;
+        }
         public bool AddProduct(ProductModel model)
         {
             try
             {
                  _context.AddDetails(model);
-                
+                _context.SaveChanges();
                 return true; 
             }
             catch (Exception ex)
@@ -41,28 +49,19 @@ namespace RepoLayer.Services
         {
             try
             {
-                // Find the product in the database by its ProductId.
-                var productToDelete = _context.Store.SingleOrDefault(p => p.ProductId == productId);
+                var parameters = new SqlParameter("@ProductId", productId);
 
-                if (productToDelete != null)
-                {
-                    // Remove the product from the context and mark it for deletion.
-                    _context.Store.Remove(productToDelete);
+                _context.Database.ExecuteSqlRaw("SPDelete @ProductId", parameters);
 
-                    // Save the changes to the database.
-                    _context.SaveChanges();
-
-                    return true;
-                }
-
-                return false; // Product not found or couldn't be deleted.
+                return true;
             }
             catch (Exception ex)
             {
-                // Handle any exceptions that might occur during the deletion process.
                 return false;
             }
         }
-
+      
     }
+
 }
+

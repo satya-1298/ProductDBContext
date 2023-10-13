@@ -11,6 +11,7 @@ namespace RepoLayer.Interfaces
         public IEnumerable<ProductEntity> GetProducts();
         public bool AddProduct(ProductModel model);
         public bool DeleteProduct(int productId);
+        public IEnumerable<ProductEntity> ProductByID(int productId);
 
 
     }

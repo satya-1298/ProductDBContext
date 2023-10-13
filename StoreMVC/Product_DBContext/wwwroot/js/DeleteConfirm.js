@@ -1,0 +1,3 @@
+﻿$('#btnDelete').click(function () {
+    $('#')
+})

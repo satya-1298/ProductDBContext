@@ -17,7 +17,7 @@ namespace RepoLayer.Context
         public DbSet<ProductEntity> Store { get; set; }
         public void AddDetails(ProductModel model )
         {
-            Database.ExecuteSqlRaw("EXEC SPProduct  ' @Code, @Name, @Description, @ExpiryDate, @Category, @Image,@Status,@CreationDate",
+            Database.ExecuteSqlRaw("EXEC SPProduct   @Code, @Name, @Description, @ExpiryDate, @Category, @Image,@Status,@CreationDate",
                 new SqlParameter("@Code",model.Code),
                 new SqlParameter("@Name", model.Name),
                 new SqlParameter("@Description", model.Description),
@@ -27,5 +27,6 @@ namespace RepoLayer.Context
                 new SqlParameter("@Status", model.Status),
                 new SqlParameter("@CreationDate", model.CreationDate));
         }
+      
     }
 }

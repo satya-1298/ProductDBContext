@@ -63,3 +63,30 @@ END
 DROP PROCEDURE SPRetrieveAllData
 
 EXEC SPRetrieveAllData
+
+--------------------------------------------------Data by Id----------------------------------------------------------
+CREATE PROCEDURE SPRetrieveByID(@ProductId INT)
+AS BEGIN
+IF EXISTS(	SELECT * FROM Store WHERE ProductId=@ProductId)
+	SELECT * FROM Store WHERE ProductId=@ProductId
+ELSE
+	SELECT 
+		ERROR_LINE() AS ErrorLine
+	RETURN
+END
+
+Exec SPRetrieveByID 1
+
+Drop procedure SPRetrieveByID 
+--------------------------------------------------------Delete--------------------------------------------
+CREATE PROCEDURE SPDelete(@ProductId INT)
+AS BEGIN
+IF EXISTS(	SELECT * FROM Store WHERE  ProductId=@ProductId)
+	DELETE Store WHERE   ProductId=@ProductId
+ELSE
+	SELECT 
+		ERROR_LINE() AS ErrorLine
+	RETURN
+END
+
+EXEC SPDelete 3

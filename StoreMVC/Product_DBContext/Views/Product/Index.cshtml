@@ -3,11 +3,11 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<link href="./css/Index.css" rel="stylesheet" />
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="AddEdit">Create New</a>
 </p>
  
 <form method="get" asp-action="Index"> 
@@ -77,9 +77,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Category)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Image)
-            </td>
+                    <td>
+                       <img src="@Url.Content(item.Image)" />
+                    </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
@@ -87,9 +87,9 @@
                 @Html.DisplayFor(modelItem => item.CreationDate)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new {  id=item.ProductId  }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <button type="button" class="Edit-style">@Html.ActionLink("Edit", "AddEdit", new {  code=item.Code  })</button>|
+
+                <button type="button" class="Delete-style">@Html.ActionLink("Delete", "Delete", new {  id=item.ProductId})</button>
             </td>
         </tr>
 }

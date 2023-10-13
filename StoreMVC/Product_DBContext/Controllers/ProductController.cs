@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using RepoLayer.Entity;
 using RepoLayer.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -34,27 +35,30 @@ namespace Product_DBContext.Controllers
             //Search
             if (!string.IsNullOrEmpty(search))
             {
-                if (DateTime.TryParseExact(search, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime searchDate))
+                if (DateTime.TryParseExact(search, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime searchDate))
                 {
-                    products = products.Where(p => p.ExpiryDate.Date == searchDate.Date).ToList();
+                    products = products.Where(p => p.ExpiryDate.Date == searchDate.Date||p.CreationDate.Date==searchDate.Date).ToList();
                 }
                 else
                 {
-                    products = products.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                    products = products.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase) || p.Code.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    ||p.Category.Contains(search, StringComparison.OrdinalIgnoreCase) ||p.Status.Equals(search, StringComparison.OrdinalIgnoreCase)
+                    ||p.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
                 }
+
             }
 
             //Sorting date 
             switch (sorting)
             {
-                case "name_desc":
-                    products = products.OrderByDescending(p => p.ExpiryDate).ToList();
+                case "desc":
+                    products = products.OrderByDescending(p => p.CreationDate).ToList();
                     break;
-                case "name_asc":
-                    products = products.OrderBy(p => p.ExpiryDate).ToList();
+                case "asc":
+                    products = products.OrderBy(p => p.CreationDate).ToList();
                     break;
                 default:
-                    products = products.OrderByDescending(p => p.ExpiryDate).ToList();
+                    products = products.OrderByDescending(p => p.CreationDate).ToList();
                     break;
             }
             // Convert ProductEntity objects to ProductModel objects
@@ -70,49 +74,47 @@ namespace Product_DBContext.Controllers
                 Status = ProductEntity.Status,
                 CreationDate = ProductEntity.CreationDate
             });
-           
+
             return View(result);
         }
 
-      
-
-
-
         /// <summary>
-        /// Creates Product and add that to database 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns> Go to Index Method to view List of Products</returns>
-        [HttpPost]
-        public IActionResult Create(ProductModel model) 
-        {
-            try
-            {               
-                    repoProduct.AddProduct(model);
-                    return RedirectToAction("Index");              
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-
-        /// <summary>
-        /// Updating the Product details  here iam calling AddProduct 
+        /// creating and  Updating the Product details  here iam calling AddProduct 
         /// because i only want two pages which is Listing and adding  by giving 
         /// AddProduct when we enter same ID it will Update otherwise it will create
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Update/create product into database and go to index to view the list</returns>
+       
+        public IActionResult  AddEdit(string code)
+        {
+            List<ProductEntity> list = repoProduct.GetProducts().ToList();
+            ProductEntity entity = list.SingleOrDefault(e => e.Code == code);
+
+            if (entity != null)
+            {
+                ProductModel model = new ProductModel
+                {
+                    ProductId = entity.ProductId,
+                    Code = entity.Code,
+                    Name = entity.Name,
+                    Description = entity.Description,
+                    ExpiryDate = entity.ExpiryDate,
+                    Category = entity.Category,
+                    Image = entity.Image,
+                    Status = entity.Status,
+                    CreationDate = entity.CreationDate
+                };
+
+                return View(model);
+            }
+            else
+            {
+                return View();
+            }
+        }
         [HttpPost]
-        public IActionResult Edit(ProductModel model) 
+        public IActionResult AddEdit(ProductModel model)
         {
             try
             {
@@ -128,28 +130,33 @@ namespace Product_DBContext.Controllers
                 throw;
             }
         }
-        public IActionResult Edit()
-        {
-            return View();
-        }
+
+        /// <summary>
+        /// Deleting the Product by ProductId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IActionResult Delete(int id)
         {
             try
             {
-                repoProduct.DeleteProduct(id);
-                if(true)
-                {
+                var productToDelete = repoProduct.ProductByID(id).SingleOrDefault();
 
-                    ViewBag.AlertMessage = "Your alert message here.";
-                    return View();
+                if (productToDelete != null)
+                {
+                    repoProduct.DeleteProduct(productToDelete.ProductId);
+
                 }
+              
+
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
                 throw;
             }
         }
-        
+
+
     }
 }
