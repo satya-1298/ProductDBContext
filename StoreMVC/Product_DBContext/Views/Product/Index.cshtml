@@ -3,25 +3,24 @@
 @{
     ViewData["Title"] = "Index";
 }
-<link href="./css/Index.css" rel="stylesheet" />
-<h1>Index</h1>
+ <link href="./css/IndexStyle.css" rel="stylesheet" />
+ <h1>Index</h1>
 
 <p>
     <a asp-action="AddEdit">Create New</a>
 </p>
  
-<form method="get" asp-action="Index"> 
-    
-    <div class="form-group">
-        <input type="text" name="search" class="form-control" placeholder="Search by Name" />
-    </div>
-    <div>
-    <button type="submit" class="btn btn-primary">Search</button>
-    </div>
+<form method="get" asp-action="Index">
 
-</form> 
-<div>
-<table class="table">
+    <p>
+        Find by name: @Html.TextBox("search")
+        <input type="submit" value="Search" />
+    </p>
+
+</form>
+
+
+<table class="table" id="product-table">
     <thead>
         <tr>
           @*  <th>
@@ -33,6 +32,7 @@
          
             <th>
                 @Html.DisplayNameFor(model => model.Name)
+                 
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
@@ -52,6 +52,7 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreationDate)
+                   
             </th>
             <th></th>
         </tr>
@@ -89,10 +90,27 @@
             <td>
                 <button type="button" class="Edit-style">@Html.ActionLink("Edit", "AddEdit", new {  code=item.Code  })</button>|
 
-                <button type="button" class="Delete-style">@Html.ActionLink("Delete", "Delete", new {  id=item.ProductId})</button>
-            </td>
+                        <button type="button" class="Delete-style" data-url="@Url.Action("Delete", new { id = item.ProductId })">Delete</button>
+                    </td>
         </tr>
 }
     </tbody>
 </table>
-</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var deleteButtons = document.querySelectorAll('.Delete-style');
+
+    deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            var deleteUrl = this.getAttribute('data-url');
+            if (confirm("Are you sure you want to delete this item?")) {
+                window.location.href = deleteUrl;
+            }
+        });
+        });
+    });
+</script>

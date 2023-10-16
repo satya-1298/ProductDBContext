@@ -1,0 +1,47 @@
+﻿body {
+    background-color: pink;
+}
+
+.Edit-style {
+    background-color: rgb(59,119,207);
+    border-radius: 20px
+}
+
+.Delete-style {
+    background-color: indianred;
+    border-radius: 20px
+}
+input[type="submit"] {
+    background-color: black;
+    color: white
+}
+
+
+main.pb-3 {
+    width: 70vw;
+}
+
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
+    width: 5vw;
+    color: white;
+}
+a {
+    color: white;
+}
+.form-control {
+    display: block;
+    width: 90%;
+    margin-right: 106px;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}

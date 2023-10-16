@@ -37,17 +37,17 @@ namespace Product_DBContext.Controllers
             {
                 if (DateTime.TryParseExact(search, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime searchDate))
                 {
-                    products = products.Where(p => p.ExpiryDate.Date == searchDate.Date||p.CreationDate.Date==searchDate.Date).ToList();
+                    products = products.Where(p => p.ExpiryDate.Date == searchDate.Date || p.CreationDate.Date == searchDate.Date).ToList();
                 }
                 else
                 {
                     products = products.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase) || p.Code.Contains(search, StringComparison.OrdinalIgnoreCase)
-                    ||p.Category.Contains(search, StringComparison.OrdinalIgnoreCase) ||p.Status.Equals(search, StringComparison.OrdinalIgnoreCase)
-                    ||p.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                    || p.Category.Contains(search, StringComparison.OrdinalIgnoreCase) || p.Status.Equals(search, StringComparison.OrdinalIgnoreCase)
+                    || p.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
                 }
 
             }
-
+           
             //Sorting date 
             switch (sorting)
             {
