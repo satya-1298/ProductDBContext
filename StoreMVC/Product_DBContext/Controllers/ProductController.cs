@@ -33,34 +33,34 @@ namespace Product_DBContext.Controllers
             var products = repoProduct.GetProducts();
 
             //Search
-            if (!string.IsNullOrEmpty(search))
-            {
-                if (DateTime.TryParseExact(search, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime searchDate))
-                {
-                    products = products.Where(p => p.ExpiryDate.Date == searchDate.Date || p.CreationDate.Date == searchDate.Date).ToList();
-                }
-                else
-                {
-                    products = products.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase) || p.Code.Contains(search, StringComparison.OrdinalIgnoreCase)
-                    || p.Category.Contains(search, StringComparison.OrdinalIgnoreCase) || p.Status.Equals(search, StringComparison.OrdinalIgnoreCase)
-                    || p.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
-                }
+            //if (!string.IsNullOrEmpty(search))
+            //{
+            //    if (DateTime.TryParseExact(search, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime searchDate))
+            //    {
+            //        products = products.Where(p => p.ExpiryDate.Date == searchDate.Date || p.CreationDate.Date == searchDate.Date).ToList();
+            //    }
+            //    else
+            //    {
+            //        products = products.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase) || p.Code.Contains(search, StringComparison.OrdinalIgnoreCase)
+            //        || p.Category.Contains(search, StringComparison.OrdinalIgnoreCase) || p.Status.Equals(search, StringComparison.OrdinalIgnoreCase)
+            //        || p.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            //    }
 
-            }
+            //}
            
-            //Sorting date 
-            switch (sorting)
-            {
-                case "desc":
-                    products = products.OrderByDescending(p => p.CreationDate).ToList();
-                    break;
-                case "asc":
-                    products = products.OrderBy(p => p.CreationDate).ToList();
-                    break;
-                default:
-                    products = products.OrderByDescending(p => p.CreationDate).ToList();
-                    break;
-            }
+            ////Sorting date 
+            //switch (sorting)
+            //{
+            //    case "desc":
+            //        products = products.OrderByDescending(p => p.CreationDate).ToList();
+            //        break;
+            //    case "asc":
+            //        products = products.OrderBy(p => p.CreationDate).ToList();
+            //        break;
+            //    default:
+            //        products = products.OrderByDescending(p => p.CreationDate).ToList();
+            //        break;
+            //}
             // Convert ProductEntity objects to ProductModel objects
             var result = products.Select(ProductEntity => new ProductModel
             {
@@ -74,6 +74,7 @@ namespace Product_DBContext.Controllers
                 Status = ProductEntity.Status,
                 CreationDate = ProductEntity.CreationDate
             });
+
 
             return View(result);
         }

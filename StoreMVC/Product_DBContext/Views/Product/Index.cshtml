@@ -10,7 +10,7 @@
     <a asp-action="AddEdit">Create New</a>
 </p>
  
-<form method="get" asp-action="Index">
+@* <form method="get" asp-action="Index">
 
     <p>
         Find by name: @Html.TextBox("search")
@@ -18,7 +18,7 @@
     </p>
 
 </form>
-
+ *@
 
 <table class="table" id="product-table">
     <thead>
@@ -73,7 +73,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ExpiryDate)
+                @item.ExpiryDate.ToString("yyyy-MM-dd")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Category)
@@ -85,7 +85,7 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
+                @item.CreationDate.ToString("yyyy-MM-dd")
             </td>
             <td>
                 <button type="button" class="Edit-style">@Html.ActionLink("Edit", "AddEdit", new {  code=item.Code  })</button>|
