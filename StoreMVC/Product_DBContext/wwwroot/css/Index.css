@@ -16,17 +16,15 @@ input[type="submit"] {
     background-color: black;
     color: white
 }
-
 [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
-    cursor: grab;
+    cursor:grab;
     width: 5vw;
     color: white;
 }
 
 a {
-    color: black;
+    color:black;
 }
-
 .description-cell {
     max-width: 100px; /* Set the desired maximum width */
     white-space: nowrap;

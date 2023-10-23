@@ -29,9 +29,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <input asp-for="Description" class="form-control overflow-ellipsis" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
                 <label asp-for="ExpiryDate" class="control-label"></label>
                 <input asp-for="ExpiryDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
@@ -53,20 +55,32 @@
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
                 <div>
-                    @Html.RadioButtonFor(model =>model.Image,"/Assets/Female1.PNG")
-                    <img class="image-1" src="~/Assets/Female1.PNG" />
+                    @Html.RadioButtonFor(model =>model.Image,"/Assets/bycicle.png")
+                    <img class="image-1" src="~/Assets/bycicle.png" width="55px" height="55px" />
 
-                    @Html.RadioButtonFor(model =>model.Image,"/Assets/Female2.PNG")
-                    <img class="image-1" src="~/Assets/Female2.PNG" />
+                    @Html.RadioButtonFor(model =>model.Image,"/Assets/car.png")
+                    <img class="image-1" src="~/Assets/car.png" width="55px" height="55px" />
 
-                    @Html.RadioButtonFor(model =>model.Image,"/Assets/Male1.PNG")
-                    <img class="image-1" src="~/Assets/Male1.PNG" />
+                    @Html.RadioButtonFor(model =>model.Image,"/Assets/desktop.png")
+                    <img class="image-1" src="~/Assets/desktop.png" width="55px" height="55px" />
 
-                    @Html.RadioButtonFor(model =>model.Image,"/Assets/Male2.PNG")
-                    <img class="image-1" src="~/Assets/Male2.PNG" />
+                    @Html.RadioButtonFor(model =>model.Image,"/Assets/stack-of-books.png")
+                    <img class="image-1" src="~/Assets/stack-of-books.png" width="55px" height="55px" />
+
+                    @Html.RadioButtonFor(model =>model.Image,"/Assets/milk.png")
+                    <img class="image-1" src="~/Assets/milk.png" width="55px" height="55px" />
+
+                    @Html.RadioButtonFor(model =>model.Image,"/Assets/rice-cooker.png")
+                    <img class="image-1" src="~/Assets/rice-cooker.png" width="55px" height="55px" />
+
                 </div> 
                 <span asp-validation-for="Image" class="text-danger"></span>
-            </div>
+            </div> 
+           @*  <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" type="file" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div> *@
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
                 <div>
@@ -92,7 +106,74 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Function to show SweetAlert
+        function showSuccessAlert() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Record Added Successfully',
+                showConfirmButton: false,
+                timer: 1500, // Auto close the alert after 1.5 seconds
+                onClose: () => {
+                    // Redirect to the Index page after the alert is closed
+                    window.location.href = "https://localhost:44315/";
+
+                }
+            });
+        }
+
+        // Function to handle the form submission
+        $(document).ready(function () {
+            $("form").on("submit", function (e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                // You can use AJAX to submit the form data to the server
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: $(this).attr("method"),
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        // If the form submission is successful, show the SweetAlert
+                        showSuccessAlert();
+                    },
+                    error: function (error) {
+                        // Handle any errors here
+                        // You can display an error message using another SweetAlert or other methods
+                    }
+                });
+            });
+        });
+    </script>
+    @* <script>
+    // Function to preview the selected image
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image-preview').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Listen for changes in the file input field
+    $('#Image').change(function () {
+        previewImage(this);
+    });
+</script>
+
+<div class="form-group">
+    <label asp-for="Image" class="control-label"></label>
+    <input asp-for="Image" type="file" class="form-control" id="Image" />
+    <img id="image-preview" src="#" alt="Image Preview" style="max-width: 100px; max-height: 100px;" />
+    <span asp-validation-for="Image" class="text-danger"></span>
+</div> *@
+
+
 }

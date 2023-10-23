@@ -27,7 +27,7 @@ namespace RepoLayer.Services
         public IEnumerable<ProductEntity> ProductByID(int productId)
         {
         
-             var result=_context.Store.FromSqlRaw("EXEC SPRetrieveByID @ProductId_Id", new SqlParameter("@ProductId_Id", productId))
+             var result=_context.Store.FromSqlRaw("EXEC SPRetrieveByID @ProductId", new SqlParameter("@ProductId", productId))
                 .ToList();
             return result;
         }

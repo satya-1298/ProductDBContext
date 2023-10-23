@@ -2,15 +2,23 @@
 
 @{
     ViewData["Title"] = "Index";
+    Pagination pagination = new Pagination();
+    int pageNo = 0;
+    if(ViewBag.Pagination!=null)
+    {
+        pagination = ViewBag.Pagination;
+        pageNo = pagination.CurrentPage;
+    }
 }
- <link href="./css/IndexStyle.css" rel="stylesheet" />
+@* <link href="./css/Index.css" rel="stylesheet"/> *@
+   <link href="./css/IndexStyle.css" rel="stylesheet" /> 
  <h1>Index</h1>
 
 <p>
     <a asp-action="AddEdit">Create New</a>
 </p>
  
-@* <form method="get" asp-action="Index">
+<form method="get" asp-action="Index">
 
     <p>
         Find by name: @Html.TextBox("search")
@@ -18,40 +26,51 @@
     </p>
 
 </form>
- *@
+ 
 
-<table class="table" id="product-table">
+<table class="table table-striped" id="product-table">
     <thead>
         <tr>
           @*  <th>
                 @Html.DisplayNameFor(model => model.ProductId)
             </th> *@
             <th>
-                @Html.DisplayNameFor(model => model.Code)
+               @*  @Html.DisplayNameFor(model => model.Code) *@
+                @Html.ActionLink("Code","Index",new{sorting=ViewBag.CodeSort})
             </th>
          
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+               @*  @Html.DisplayNameFor(model => model.Name) *@
+                @Html.ActionLink("Name", "Index", new { sorting = ViewBag.NameSortParm })
                  
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @* @Html.DisplayNameFor(model => model.Description) *@
+                @Html.ActionLink("Description","Index",new{sorting=ViewBag.DescriptionSort})
             </th>
            
              <th>
-                @Html.DisplayNameFor(model => model.ExpiryDate)
+@*                 @Html.DisplayNameFor(model => model.ExpiryDate) *@
+                   @Html.ActionLink("ExpiryDate","Index",new {sorting=ViewBag.EDateSortParm})
             </th> 
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                @* @Html.DisplayNameFor(model => model.Category) *@
+                @Html.ActionLink("Category","Index",new{sorting=ViewBag.CategorySort})
+
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Image)
+
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+@*                 @Html.DisplayNameFor(model => model.Status)
+ *@                @Html.ActionLink("Status","Index",new{sorting=ViewBag.StatusSort})
+
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreationDate)
+@*                 @Html.DisplayNameFor(model => model.CreationDate)
+ *@                @Html.ActionLink("CreationDate","Index",new{sorting=ViewBag.CDateSort})
+
                    
             </th>
             <th></th>
@@ -69,7 +88,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
+                <td class="description-cell">
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
@@ -79,7 +98,7 @@
                 @Html.DisplayFor(modelItem => item.Category)
             </td>
                     <td>
-                       <img src="@Url.Content(item.Image)" />
+                    <img src="@Url.Content(item.Image)" width="55px" height="55px" />
                     </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
@@ -91,26 +110,74 @@
                 <button type="button" class="Edit-style">@Html.ActionLink("Edit", "AddEdit", new {  code=item.Code  })</button>|
 
                         <button type="button" class="Delete-style" data-url="@Url.Action("Delete", new { id = item.ProductId })">Delete</button>
-                    </td>
+                 </td>
         </tr>
 }
     </tbody>
 </table>
+
+<div class="page">
+    @if(pagination.TotalPages>0)
+    {
+        <ul class="pagination justify-content-start">
+
+            @if(pagination.CurrentPage>1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Product" asp-action="Index" asp-route-page="1" asp-route-search="@ViewBag.Search">First</a>
+
+                </li>
+                <li>
+                    <a class="page-link" asp-controller="Product" asp-action="Index" asp-route-page="@(pagination.CurrentPage-1)" asp-route-search="@ViewBag.Search">Previous</a>
+                </li>
+            }
+            @for(var pge=pagination.StartPage;pge<=pagination.EndPage;pge++)
+            {
+                <li class="page-item @(pge==pagination.CurrentPage ? "active":"")">
+                    <a class="page-link" asp-controller="Product" asp-action="Index" asp-route-page="@pge" asp-route-search="@ViewBag.Search">@pge</a>
+                </li>
+            }
+            @if(pagination.CurrentPage<pagination.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Product" asp-action="Index" asp-route-page="@(pagination.CurrentPage+1)" asp-route-search="@ViewBag.Search">Next</a>
+
+                </li>
+                <li>
+                    <a class="page-link" asp-controller="Product" asp-action="Index" asp-route-page="@(pagination.TotalPages)" asp-route-search="@ViewBag.Search">Last</a>
+                </li>
+            }
+        </ul>
+    }
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var deleteButtons = document.querySelectorAll('.Delete-style');
 
-    deleteButtons.forEach(function (button) {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
+        deleteButtons.forEach(function (button) {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
 
-            var deleteUrl = this.getAttribute('data-url');
-            if (confirm("Are you sure you want to delete this item?")) {
-                window.location.href = deleteUrl;
-            }
-        });
+                var deleteUrl = this.getAttribute('data-url');
+                if (confirm("Are you sure you want to delete this item?")) {
+                    // Redirect to the delete URL
+                    window.location.href = deleteUrl;
+                }
+            });
         });
     });
+
+    // Function to show a SweetAlert notification when the product is successfully deleted
+    function showDeletedNotification() {
+        Swal.fire("Success", "Product has been deleted successfully", "success");
+    }
+
+    // Check if a success parameter is present in the URL and show the SweetAlert notification
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('success')) {
+        showDeletedNotification();
+    }
 </script>

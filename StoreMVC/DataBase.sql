@@ -1,3 +1,9 @@
+--===========================================================---
+--Author :Sai Satya
+--CreationDate :10-10-2023
+--Description : DataBase Creation
+--============================================================---
+
 CREATE DATABASE StoreDB
 CREATE TABLE Store
 (
@@ -19,7 +25,11 @@ Values('fdsdfv','Satya','hjdfjgvbevjhc','2024-12-20','Category A','fefvev','Acti
 
 -----------------------------------StoreProcedure--------------------------------------------
  
- -----------------------------------------Creation------------------------------------
+--===========================================================---
+--Author :Sai Satya
+--CreationDate :10-10-2023
+--Description : StoreProcedure for Product Create and Update
+--============================================================---
  CREATE PROCEDURE SPProduct
 (
 
@@ -52,7 +62,12 @@ RETURN
 END
 
 Drop Procedure SPProduct
----------------------------------Retrieve Data------------------------------------
+
+--===========================================================---
+--Author :Sai Satya
+--CreationDate :11-10-2023
+--Description :SP for Retrieving Products
+--============================================================---
 CREATE PROCEDURE SPRetrieveAllData
 AS BEGIN
 
@@ -64,7 +79,12 @@ DROP PROCEDURE SPRetrieveAllData
 
 EXEC SPRetrieveAllData
 
---------------------------------------------------Data by Id----------------------------------------------------------
+
+--===========================================================---
+--Author :Sai Satya
+--CreationDate :12-10-2023
+--Description :SP for Getting Product by specific Id
+--============================================================---
 CREATE PROCEDURE SPRetrieveByID(@ProductId INT)
 AS BEGIN
 IF EXISTS(	SELECT * FROM Store WHERE ProductId=@ProductId)
@@ -78,7 +98,12 @@ END
 Exec SPRetrieveByID 1
 
 Drop procedure SPRetrieveByID 
---------------------------------------------------------Delete--------------------------------------------
+
+--===========================================================---
+--Author :Sai Satya
+--CreationDate :12-10-2023
+--Description :SP for Delete specific Product
+--============================================================---
 CREATE PROCEDURE SPDelete(@ProductId INT)
 AS BEGIN
 IF EXISTS(	SELECT * FROM Store WHERE  ProductId=@ProductId)

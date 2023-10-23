@@ -6,36 +6,44 @@ using System.Threading.Tasks;
 
 namespace Product_DBContext.Models
 {
-    public class Pagination<T> : List<T>
-
+    public class Pagination
     {
-        public int PageIndex { get; set; }
-        public int TotalPages { get; set; }
-        public Pagination(List<T> items, int count, int pageIndex, int pageSize)
+        public int TotalItems { get; private set; }
+        public int CurrentPage { get; private set; }
+        public int PageSize { get; private set; }
+        public int TotalPages { get; private set; }
+        public int StartPage { get; private set; }
+        public int EndPage { get; private set; }
+        public Pagination()
         {
-            PageIndex= pageIndex;
-            TotalPages= (int)Math.Ceiling(count/(double)pageSize);
-            this.AddRange(items);
+
         }
-        public bool PreviousPage
+        public Pagination(int totalItems, int page, int pageSize = 10)
         {
-            get
+            int totalPages = (int)Math.Ceiling((decimal)totalItems / (decimal)pageSize);
+            int currentPage = page;
+            int startPage = currentPage - 5;
+            int endPage = currentPage + 4;
+            if (startPage <= 0)
             {
-                return (PageIndex>1);
+                endPage = endPage - (startPage - 1);
+                startPage = 1;
             }
-        }
-        public bool NextPage
-        {
-            get
+            if (endPage > totalPages)
             {
-                return (PageIndex<TotalPages);
+                endPage = totalPages;
+                if (endPage > 10)
+                {
+                    startPage = endPage - 9;
+                }
             }
-        }
-        public static async Task<Pagination<T>> CreateAsync(IQueryable<T> source,int pageIndex,int pageSize)
-        {
-            var count = await source.CountAsync();
-            var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            return new Pagination<T>(items,count,pageIndex, pageSize);
+            TotalItems = totalItems;
+            CurrentPage = currentPage;
+            PageSize = pageSize;
+            TotalPages = totalPages;
+            StartPage = startPage;
+            EndPage = endPage;
         }
     }
+
 }

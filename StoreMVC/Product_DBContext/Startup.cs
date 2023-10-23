@@ -1,3 +1,4 @@
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +12,7 @@ using RepoLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace Product_DBContext
@@ -27,7 +29,7 @@ namespace Product_DBContext
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //DataBase Configuration
             var connectionString = Configuration.GetConnectionString("Store_DB");
 
             services.AddDbContext<ProductContext>(options =>
@@ -35,6 +37,18 @@ namespace Product_DBContext
             );
             services.AddControllersWithViews();
             services.AddTransient<IRepoProduct, RepoProduct>();
+
+            // IMPLEMENTATION OF CLOUDINARY:-
+
+            IConfigurationSection configurationSection = Configuration.GetSection("CloudinaryConnection");
+            Account cloudinaryAccount = new Account(
+                configurationSection["CloudName"],
+                configurationSection["APIKey"],
+                configurationSection["APISecret"]
+                );
+            Cloudinary cloudinary = new Cloudinary(cloudinaryAccount);
+            services.AddSingleton(cloudinary);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

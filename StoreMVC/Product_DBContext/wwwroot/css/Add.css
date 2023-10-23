@@ -1,3 +1,13 @@
 ﻿body {
     background-color: lightpink;
 }
+/*.image-1 {
+    width: 45px;
+    height: 45px;
+}*/
+.overflow-ellipsis {
+    width: 300px; /* Set the desired width */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
